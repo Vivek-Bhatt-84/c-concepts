@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include <algorithm>
 
 using namespace std;
 
@@ -33,12 +34,13 @@ public:
     }
 
     void fire(int id){
-        for(auto it = comp.begin() ; it != comp.end() ; it++){
-            if(it -> getId() == id ){
-                comp.erase(it);
-                return;
-            }
-        }
+       auto it = find_if(comp.begin() , comp.end() ,[id](shared_ptr<Employee>& emp){
+            return emp -> getId() == id;
+       });
+       if(it != comp.end()){
+        comp.erase(it);
+       }
+
     }
 
     void displayEmployees(){
@@ -51,6 +53,21 @@ public:
 
 int main()
 {
+
+    Company c;
+    Employee e1 = {"Vivek" , 001 , 5000000.0};
+    Employee e2 = {"Aditya" , 002 , 5000000.0};
+    Employee e3 = {"Akshita" , 001 , 4000000.0};
+
+    c.hire(e1);
+    c.hire(e2);
+    c.hire(e3);
+
+    cout << "display" << endl;
+    c.displayEmployees();
+
+    c.fire(003);
+    c.displayEmployees();
 
 return 0;
 }
