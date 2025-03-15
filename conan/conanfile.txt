@@ -1,0 +1,6 @@
+[requires]
+fmt/10.1.1  # Latest version at the time of writing
+
+[generators]
+CMakeDeps
+CMakeToolchain

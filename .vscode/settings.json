@@ -1,9 +1,7 @@
 {
     "files.associations": {
         "ostream": "cpp",
-        "iostream": "cpp",
-        "chrono": "cpp",
-        "string": "cpp",
-        "utility": "cpp"
-    }
+        "iosfwd": "cpp"
+    },
+    "cmake.ignoreCMakeListsMissing": true
 }

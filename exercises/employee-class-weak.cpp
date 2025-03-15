@@ -53,7 +53,9 @@ class Department{
     string name;
     vector<weak_ptr<Employee>> dept_list; 
 public:
-    void 
+    string getName(){
+        return name;
+    }
 };
 
 

@@ -18,33 +18,31 @@ Key components of the Builder Pattern in C++
 #include <iostream>
 using namespace std;
 
-
-//product class
-class Computer{
+// Product class
+class Computer {
     string cpu;
     string memory;
     string storage;
 public:
-    void setCPU(const string& c){
+    void setCPU(const string& c) {
         cpu = c;
     }
-    void setMemory(const string& m){
+    void setMemory(const string& m) {
         memory = m;
     }
-    void setStorage(const string& st){
+    void setStorage(const string& st) {
         storage = st;
     }
 
-    void display(){
+    void display() {
         cout << "C.P.U : " << cpu << endl;
         cout << "Memory : " << memory << endl;
-        cout << "Storage : " << storage << endl;      
+        cout << "Storage : " << storage << endl;
     }
-
 };
 
-// builder interface
-class ComputerBuilder{
+// Builder interface
+class ComputerBuilder {
 public:
     virtual void buildCpu(const string& cpu) = 0;
     virtual void buildMemory(const string& memo) = 0;
@@ -52,10 +50,11 @@ public:
     virtual Computer getResult() = 0;
 };
 
-class DesktopBuilder : public ComputerBuilder{
+// Concrete Builder for Desktop
+class DesktopBuilder : public ComputerBuilder {
     Computer comp;
-public :
-    void buildCpu(const string& cpu) override{
+public:
+    void buildCpu(const string& cpu) override {
         comp.setCPU(cpu);
     }
     void buildMemory(const string& memo) override {
@@ -64,30 +63,25 @@ public :
     void buildStorage(const string& storage) override {
         comp.setStorage(storage);
     }
-    Computer getResult() override{
+    Computer getResult() override {
         return comp;
     }
-
 };
 
-// director
-class ComputerAssembler{
-public:
-    Computer compAssembler(ComputerBuilder& obj){
-        obj.buildCpu("Intel i7");
-        obj.buildMemory("16GB");
-        obj.buildStorage("512 GB SSD");
-        return obj.getResult();
-    }
-};
-
-int main()
-{
+int main() {
+    // Create a DesktopBuilder
     DesktopBuilder dskBuild;
-    ComputerAssembler assemble;
-    Computer desktop = assemble.compAssembler(dskBuild);
+    
+    // Build the computer directly in the main
+    dskBuild.buildCpu("Intel i7");
+    dskBuild.buildMemory("16GB");
+    dskBuild.buildStorage("512 GB SSD");
+    
+    // Get the resulting computer
+    Computer desktop = dskBuild.getResult();
 
+    // Display the result
     desktop.display();
 
-return 0;
+    return 0;
 }
