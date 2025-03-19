@@ -1,0 +1,5 @@
+writing into file 
+writing with fstream 
+
+
+

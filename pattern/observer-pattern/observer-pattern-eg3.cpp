@@ -1,81 +1,77 @@
-/**
- * stock market exchange(subject)
- * st (observer)
- */
-
-#include <iostream>
-#include <vector>
-#include <memory>
-#include <algorithm>
+#include<bits/stdc++.h>
 using namespace std;
 
-class Investor
-{
-public:
-    virtual void update(float price) = 0;
+//observer interface 
+class Observer{
+    public:
+        virtual void update(const string& name, float price) = 0;
+        virtual ~Observer(){}
 };
 
-class StockExchange
-{
-    float stockPrice;
-    vector<shared_ptr<Investor>> st;
-
-public:
-    void addInvestor(shared_ptr<Investor> inv)
-    {
-        st.push_back(inv);
-    }
-
-    void removeInvestor(shared_ptr<Investor> inv)
-    {
-        st.erase(remove(st.begin(), st.end(), inv), st.end());
-
-    }
-
-    void notifyInvestors()
-    {
-        for (auto &investor : st)
-        {
-            investor->update(stockPrice);
+class User : public Observer{
+    public:
+        User(const string& name ) : uName(name){}
+        void update(const string& name, float price) override {
+            cout << "update for " << name <<  " price : " << price << endl;
         }
-    }
 
-    void setStockPrice(float price)
-    {
-        stockPrice = price;
-        notifyInvestors(); // Notify all subscribed investors
-    }
+    private:
+        string uName;
 };
 
-class RetailInvestor : public Investor {
+
+// subject interface 
+class Subject{
+    public : 
+        virtual void addUser(Observer* observer) = 0;
+        virtual void removeUser(Observer* observer) = 0;
+        virtual void notifyAll() = 0;
+        virtual ~Subject(){}
+};
+
+class StockMarket : public Subject{
     public:
-        void update(float price) override {
-            cout << "Retail Investor: Stock price updated to $" << price << endl;
+        StockMarket(const string& name , float price) : sName(name) , sPrice(price) {}
+        void addUser(Observer* observer) override {
+            subscriberList.push_back(observer);
         }
-    };
-    
-    class InstitutionalInvestor : public Investor {
-    public:
-        void update(float price) override {
-            cout << "Institutional Investor: Stock price updated to $" << price << endl;
+
+        void removeUser(Observer* observer) override {
+            subscriberList.erase(remove(subscriberList.begin() , subscriberList.end() , observer));
         }
-    };
 
-int main()
-{
+        void notifyAll() override {
+            for(auto& obs : subscriberList){
+                obs -> update(sName , sPrice);
+            }
+        }
 
-    shared_ptr<StockExchange> st = make_shared<StockExchange>();
-    shared_ptr<Investor> retailInvestor = make_shared<RetailInvestor>();
-    shared_ptr<Investor> institutionalInvestor = make_shared<InstitutionalInvestor>();
+        void setPrice(float price){
+            sPrice = price;
+            notifyAll();
+        }
+    private:
+    string sName;
+    float sPrice;
+    vector<Observer*> subscriberList;
+};
 
-    st->addInvestor(retailInvestor);
-    st->addInvestor(institutionalInvestor);
+int main(){
 
-    cout << " Stock price changes to Rs150\n";
-    st->setStockPrice(150); 
+    StockMarket tesla("tesla" , 35.6);
+    StockMarket bank("Bandhan-Bank" , 143.22);
 
-    cout << " Stock price changes to Rs150\n";
-    st -> setStockPrice(175);
+    User u1("Raju") ;
+    User u2("Bheem") ;
 
-    return 0;
+    tesla.addUser(&u1);
+    bank.addUser(&u1);
+
+    bank.addUser(&u2);
+    bank.removeUser(&u2);
+
+    tesla.setPrice(40.01);
+    bank.setPrice(140.23);
+
+return 0;
 }
