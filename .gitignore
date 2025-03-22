@@ -1,1 +1,8 @@
+!*.cpp
+!*.h
+
 *.exe
+*.out
+*.bin
+*.elf
+*.o
